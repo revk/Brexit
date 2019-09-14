@@ -348,7 +348,7 @@ app_main ()
                text (-1, X, Y + 3 * 8, "D");
                text (-1, X, Y + 2 * 8, "A");
                text (-1, X, Y + 1 * 8, "Y");
-               text (-1, X, Y + 0 * 8, "S");
+               text (-1, X, Y + 0 * 8, days == 1 ? " " : "S");
                Y -= 4 * 7 + 3;
                sprintf (s, "%02d", seconds / 3600);
                X = text (-4, 0, Y, s);
