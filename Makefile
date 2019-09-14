@@ -8,5 +8,5 @@ PROJECT_NAME := Brexit
 include $(IDF_PATH)/make/project.mk
 
 update:
-	git submodule update --init --recursive
+	git submodule update --init --recursive --remote
 	git commit -a -m "Library update"
