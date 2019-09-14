@@ -19,7 +19,7 @@ const char TAG[] = "CO2";
 	u8(oledcontrast,255)	\
 	b(oledflip)	\
 	b(f)	\
-	s(deadline,"2019-10-31 23:00:00")	\
+	s(deadline,CONFIG_BREXIT_DEADLINE)	\
 
 #define u32(n,d)	uint32_t n;
 #define s8(n,d)	int8_t n;
@@ -104,7 +104,7 @@ oledcopy (int x, int y, const uint8_t * src, int dx)
    return dx * OLEDB / 8;       // Bytes (would be) copied
 }
 
-#include CONFIG_ENV_LOGO
+#include CONFIG_BREXIT_LOGO
 #include "font1.h"
 #include "font2.h"
 #include "font3.h"
@@ -194,7 +194,7 @@ oled_task (void *p)
       int h = sizeof (logo) / sizeof (*logo);
       for (int dy = 0; dy < h; dy++)
          oledcopy (OLEDW - w, 10 + h - dy, logo[dy], w);
-      text (1, 0, 0, CONFIG_ENV_TAG);
+      text (1, 0, 0, CONFIG_BREXIT_TAG);
    }
 
    while (1)
@@ -261,7 +261,7 @@ app_main ()
 #define u32(n,d) revk_register(#n,0,sizeof(n),&n,#d,0);
 #define s8(n,d) revk_register(#n,0,sizeof(n),&n,#d,SETTING_SIGNED);
 #define u8(n,d) revk_register(#n,0,sizeof(n),&n,#d,0);
-#define s(n,d) revk_register(#n,0,0,&n,#d,0);
+#define s(n,d) revk_register(#n,0,0,&n,d,0);
    settings
 #undef u32
 #undef s8
@@ -306,59 +306,57 @@ app_main ()
       char s[30];
       static time_t showtime = 0;
       time_t now = time (0);
-      struct tm *nowt;
-      nowt = localtime (&showtime);
       if (now != showtime)
       {
          showtime = now;
-         if (nowt->tm_year > 100)
+         struct tm nowt;
+         localtime_r (&showtime, &nowt);
+         if (nowt.tm_year > 100)
          {
-            strftime (s, sizeof (s), "%F\004%T %Z", nowt);
+            strftime (s, sizeof (s), "%F\004%T %Z", &nowt);
             text (1, 0, 0, s);
-         }
-         int X,
-           Y = OLEDH - 1;
-         if (deadline)
-         {
-            // Work out the time left
-            int y = 0,
-               m = 0,
-               d = 0,
-               H = 0,
-               M = 0,
-               S = 0;
-            sscanf (deadline, "%d-%d-%d %d:%d:%d", &y, &m, &d, &H, &M, &S);
-            // Somewhat convoluted to allow for clock changes
-            int nows = nowt->tm_hour * 3600 + nowt->tm_min * 60 + nowt->tm_sec;
-            int deadlines = H * 3600 + M * 60 + S;
-            int diffs = 0;
-          struct tm deadt = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: H, tm_min: M, tm_sec: S, tm_isdst:-1 };
-          struct tm reft = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: nowt->tm_hour, tm_min: nowt->tm_min, tm_sec: nowt->tm_sec, tm_isdst:0 };
-            nowt->tm_isdst = 0; // To work out days
-            int days = (mktime (&reft) - mktime (nowt)) / 86400;
-            if (nows > deadlines)
+            int X,
+              Y = OLEDH - 1;
+            if (deadline)
             {
-               days--;
-               reft.tm_mday--;
+               // Work out the time left
+               int y = 0,
+                  m = 0,
+                  d = 0,
+                  H = 0,
+                  M = 0,
+                  S = 0;
+               sscanf (deadline, "%d-%d-%d %d:%d:%d", &y, &m, &d, &H, &M, &S);
+               // Somewhat convoluted to allow for clock changes
+             struct tm deadt = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: H, tm_min: M, tm_sec: S, tm_isdst:-1 };
+             struct tm reft = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: nowt.tm_hour, tm_min: nowt.tm_min, tm_sec: nowt.tm_sec, tm_isdst:0 };
+               localtime_r (&showtime, &nowt);
+               nowt.tm_isdst = 0;       // To work out days
+               int days = (mktime (&reft) - mktime (&nowt)) / 86400;
+               if (nowt.tm_hour * 3600 + nowt.tm_min * 60 + nowt.tm_sec > H * 3600 + M * 60 + S)
+               {
+                  days--;
+                  reft.tm_mday--;
+               }
+               reft.tm_isdst = -1;
+               int seconds = mktime (&deadt) - mktime (&reft);
+               if (days < 0)
+                  days = seconds = 0;   // Deadline reached
+               sprintf (s, "%4d", days);
+               Y -= 5 * 7;
+               X = text (-5, 0, Y, s);
+               text (-1, X, Y + 3 * 8, "D");
+               text (-1, X, Y + 2 * 8, "A");
+               text (-1, X, Y + 1 * 8, "Y");
+               text (-1, X, Y + 0 * 8, "S");
+               Y -= 4 * 7 + 3;
+               sprintf (s, "%02d", seconds / 3600);
+               X = text (-4, 0, Y, s);
+               sprintf (s, ":%02d", seconds / 60 % 60);
+               X = text (-3, X, Y, s);
+               sprintf (s, ":%02d", seconds % 60);
+               X = text (-2, X, Y, s);
             }
-            reft.tm_isdst = -1;
-            diffs = mktime (&deadt) - mktime (&reft);
-            if (days < 0)
-               days = diffs = 0; // Deadline reached
-            sprintf (s, "%4d", days);
-            Y -= 5 * 7;
-            X = text (-5, 0, Y, s);
-            text (-1, X, Y + 3*8, "D");
-            text (-1, X, Y + 2*8, "A");
-            text (-1, X, Y + 1*8, "Y");
-            text (-1, X, Y + 0*8, "S");
-            Y -= 4 * 7 + 1;
-            sprintf (s, "%02d", diffs / 3600);
-            X = text (-4, 0, Y, s);
-            sprintf (s, ":%02d", diffs / 60 % 60);
-            X = text (-3, X, Y, s);
-            sprintf (s, ":%02d", diffs % 60);
-            X = text (-2, X, Y, s);
          }
       }
       xSemaphoreGive (oled_mutex);

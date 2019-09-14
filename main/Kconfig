@@ -1,15 +1,21 @@
 menu "Brexit"
 
-	config ENV_LOGO
+	config BREXIT_LOGO
 	string "Logo file"
 	default "logo.h"
 	help
 		Defines the logo file to display
 
-	config ENV_TAG
+	config BREXIT_TAG
 	string "Tag line"
 	default "www.gov.uk/brexit"
 	help
 		Defines the displayed text on start up
+
+	config BREXIT_DEADLINE
+	string "Deadline"
+	default "2019-10-31 23:00:00"
+	help
+		The deadline
 
 endmenu
