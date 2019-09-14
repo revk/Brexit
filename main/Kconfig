@@ -1,4 +1,4 @@
-menu "Env"
+menu "Brexit"
 
 	config ENV_LOGO
 	string "Logo file"
@@ -8,7 +8,7 @@ menu "Env"
 
 	config ENV_TAG
 	string "Tag line"
-	default "www.aa.net.uk"
+	default "www.gov.uk/brexit"
 	help
 		Defines the displayed text on start up
 

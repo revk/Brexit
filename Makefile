@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := Env
+PROJECT_NAME := Brexit
 
 include $(IDF_PATH)/make/project.mk
 
