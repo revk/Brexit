@@ -327,6 +327,17 @@ app_main ()
                   M = 0,
                   S = 0;
                sscanf (deadline, "%d-%d-%d %d:%d:%d", &y, &m, &d, &H, &M, &S);
+               if (!m)
+                  m = 1;
+               if (!d)
+                  d = 1;
+               if (!y)
+               {                // Regular date
+                  y = nowt.tm_year + 1900;
+                  if (nowt.tm_mon * 2678400 + nowt.tm_mday * 86400 + nowt.tm_hour * 3600 + nowt.tm_min * 60 + nowt.tm_sec >
+                      (m - 1) * 2678400 + d * 86400 + H * 3600 + M * 60 + S)
+                     y++;
+               }
                // Somewhat convoluted to allow for clock changes
              struct tm deadt = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: H, tm_min: M, tm_sec: S, tm_isdst:-1 };
              struct tm timereft = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: nowt.tm_hour, tm_min: nowt.tm_min, tm_sec: nowt.tm_sec, tm_isdst:-1 };
