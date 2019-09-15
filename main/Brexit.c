@@ -339,6 +339,8 @@ app_main ()
                   reft.tm_mday--;
                }
                reft.tm_isdst = -1;
+	       revk_info("deadt","%d-%d-%d %d:%d:%d %ld",deadt.tm_year,deadt.tm_mon,deadt.tm_mday,deadt.tm_hour,deadt.tm_min,deadt.tm_sec,mktime(&deadt));
+	       revk_info("reft","%d-%d-%d %d:%d:%d %ld",reft.tm_year,reft.tm_mon,reft.tm_mday,reft.tm_hour,reft.tm_min,reft.tm_sec,mktime(&reft));
                int seconds = mktime (&deadt) - mktime (&reft);
                if (days < 0)
                   days = seconds = 0;   // Deadline reached
