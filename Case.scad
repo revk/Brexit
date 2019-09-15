@@ -1,4 +1,4 @@
-// 3D case for Environmental monitor
+// 3D case for Brexit clock
 // Copyright (c) 2019 Adrian Kennard, Andrews & Arnold Limited, see LICENSE file (GPL)
 
 // Main component cube, may just be the PCB itself
@@ -6,14 +6,14 @@
 
 compw=45;
 comph=37;
-compt=1.6+9+1.6;
+compt=1.6+5.9+1.6;
 compclear=0.5;
 
 // Box thickness reference to component cube
 base=2.6;
 top=4.6;
 side=2.5;
-sidet=0.05; // Gap in side clips
+sidet=0.1; // Gap in side clips
 
 $fn=48;
 
@@ -86,59 +86,23 @@ module comp(hole=false)
         { // Co-ordinates from PCB are 1mm border
             for(x=[3.75,43.25])
             for(y=[3.5,35.5])
-            translate([x,y,0])
-            {
-                translate([0,0,1.6])
-                cylinder(d=6,h=9);
-                translate([0,0,-1])
-                cylinder(d=5,h=compt+2);
-            }
+            translate([x,y,-1])
+            cylinder(d=4.99,h=compt+2);
             translate([0,0,compt])
             { // PCB
                 translate([26.070,10.348,0])
                 esp32();
                 // USB
-                translate([11.800,1.000,0])
+                translate([7.720+8.150,32.920+5.080,0])
+                rotate([0,0,180])
                 microusb();
-                pins(4.993,9.440,0.901,0,3*2.54);
-                pins(7.818,2.820,0.901,0,3*2.54);
-                pins(7.150,21.675,0.900,0,3*2.5);
-                pins(32.000,7.150,0.900,2*2.5,0);
-                pins(33.360,31.978,0.901,2*2.54,0);
-                pins(33.360,34.837,0.901,2.54,0);
-                translate([34.400,4.480,0])
-                smd1206();
+                pins(3.088,10.160,0.901,0,2.54);
+                pins(3.088,17.780,0.901,0,2.54);
+                pins(12.815,28.292,0.901,2*2.54,0);
+                pins(21.960,30.950,0.900,3*2.5,0);
                 if(hole)
-                    translate([32.548,36.510,,0])
-                    cube([5.232,1.440,top*2]);
-                translate([30,1,-1.6])
-                mirror([0,0,1])
-                spox(3,hole);
-                if(0)
-                { // re-flash port, not needed externally
-                    translate([1,19.715+12.4,-1.6])
-                    mirror([0,0,1])
-                    rotate([0,0,-90])
-                    spox(4,hole);
-                }
-            }
-            // Connectors
-            if(hole)
-            {
-                translate([11.800,-2,compt])
-                cube([8.150,3,4]);
-                translate([11.800-1,-side*2-2,compt-1])
-                cube([10.3,side*2,6]);
-                translate([19,-20,6.6])
-                cube([3,25,1]); // Air hole
-                for(y=[14,31])
-                translate([16,y,compt])
-                { // Screw
-                    cylinder(d=7,h=1);
-                    translate([0,0,1])
-                    cylinder(d1=7,d2=3,h=2);
-                    cylinder(d=3,h=top*2);
-                }
+                    translate([7.720,32.920,0])
+                    cube([8.150,5.080+side*2,4]); // Power
             }
         }
     }
@@ -191,19 +155,12 @@ module cut(a=false)
         translate([0,-5,0])
         cube([30,18+10,1]);
     }
-    translate([side-1+11.800,side-1+1.000-20,base+compt-7])
+    translate([side-1+7.720,side-1+compw-20,base+compt-7])
     hull()
     { // USB
         cube([8.15,30,7.001]);
         translate([-5,0,0])
         cube([8.15+10,30,1]);
-    }
-    translate([side-1+30,side-1+1-15,base+compt-1.6-10-4.9])
-    hull()
-    {
-        cube([9.9,30,10]);
-        translate([-2,0,0])
-        cube([9.9+4,30,1]);
     }
 }
 
