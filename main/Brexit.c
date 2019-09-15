@@ -114,12 +114,12 @@ const uint8_t *const fonts[] = { font1, font2, font3, font4, font5 };
 
 int
 text (int8_t size, int x, int y, char *t)
-{                               // Size (negative for 5x7 not 5x9
-   int z = 9;
+{                               // Size (negative for descenders)
+   int z = 7;
    if (size < 0)
    {
       size = -size;
-      z = 7;
+      z = 9;
    }
    if (!size)
       size = 1;
@@ -344,18 +344,18 @@ app_main ()
                   days = seconds = 0;   // Deadline reached
                sprintf (s, "%4d", days);
                Y -= 5 * 7;
-               X = text (-5, 0, Y, s);
-               text (-1, X, Y + 3 * 8, "D");
-               text (-1, X, Y + 2 * 8, "A");
-               text (-1, X, Y + 1 * 8, "Y");
-               text (-1, X, Y + 0 * 8, days == 1 ? " " : "S");
+               X = text (5, 0, Y, s);
+               text (1, X, Y + 3 * 8, "D");
+               text (1, X, Y + 2 * 8, "A");
+               text (1, X, Y + 1 * 8, "Y");
+               text (1, X, Y + 0 * 8, days == 1 ? " " : "S");
                Y -= 4 * 7 + 3;
                sprintf (s, "%02d", seconds / 3600);
-               X = text (-4, 0, Y, s);
+               X = text (4, 0, Y, s);
                sprintf (s, ":%02d", seconds / 60 % 60);
-               X = text (-3, X, Y, s);
+               X = text (3, X, Y, s);
                sprintf (s, ":%02d", seconds % 60);
-               X = text (-2, X, Y, s);
+               X = text (2, X, Y, s);
             }
          }
       }
