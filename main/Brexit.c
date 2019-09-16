@@ -339,20 +339,18 @@ app_main ()
                      y++;
                }
                // Somewhat convoluted to allow for clock changes
-             struct tm deadt = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: H, tm_min: M, tm_sec: S, tm_isdst:-1 };
-             struct tm timereft = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: nowt.tm_hour, tm_min: nowt.tm_min, tm_sec: nowt.tm_sec, tm_isdst:-1 };
                int days = 0;
                {                // Work out days (using H:M:S non DST)
-                struct tm dayreft = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: nowt.tm_hour, tm_min: nowt.tm_min, tm_sec: nowt.tm_sec, tm_isdst:0 };
-                struct tm daynowt = { tm_year: nowt.tm_year, tm_mon: nowt.tm_mon, tm_mday: nowt.tm_mday, tm_hour: nowt.tm_hour, tm_min: nowt.tm_min, tm_sec: nowt.tm_sec, tm_isdst:0 };
-                  days = (mktime (&dayreft) - mktime (&daynowt)) / 86400;
+                struct tm target = { tm_year: y - 1900, tm_mon: m - 1, tm_mday:d };
+                struct tm today = { tm_year: nowt.tm_year, tm_mon: nowt.tm_mon, tm_mday:nowt.tm_mday };
+                  days = (mktime (&target) - mktime (&today)) / 86400;
+                  if (nowt.tm_hour * 3600 + nowt.tm_min * 60 + nowt.tm_sec > H * 3600 + M * 60 + S)
+                     days--;    // Passed current time
                }
-               if (nowt.tm_hour * 3600 + nowt.tm_min * 60 + nowt.tm_sec > H * 3600 + M * 60 + S)
-               {
-                  days--;
-                  timereft.tm_mday--;
-               }
-               int seconds = mktime (&deadt) - mktime (&timereft);
+             struct tm deadt = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: H, tm_min: M, tm_sec: S, tm_isdst:-1 };
+               nowt.tm_mday += days;    // Current local time, this many days ahead
+               nowt.tm_isdst = -1;
+               int seconds = mktime (&deadt) - mktime (&nowt);
                if (days < 0)
                   days = seconds = 0;   // Deadline reached
                sprintf (s, "%4d", days);
