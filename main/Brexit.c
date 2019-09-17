@@ -1,5 +1,6 @@
-// CO2 + other sensors all
-const char TAG[] = "CO2";
+// Brexit clock
+// Copyright (c) 2019 Adrian Kennard, Andrews & Arnold Limited, see LICENSE file (GPL)
+const char TAG[] = "Brexit";
 
 #include "revk.h"
 #include <driver/i2c.h>
