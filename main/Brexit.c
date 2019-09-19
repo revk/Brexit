@@ -77,7 +77,7 @@ app_main ()
       char s[30];
       static time_t showtime = 0;
       time_t now = time (0);
-      if (now != showtime)
+      if (now != showtime && now < 1000000000)
       {
          oled_lock ();
          showtime = now;
@@ -138,8 +138,7 @@ app_main ()
                sprintf (s, ":%02d", seconds % 60);
                X = oled_text (2, X, Y, s);
             }
-         }
-	 else
+         } else
             oled_text (1, 0, 0, "Clock not set...");
          oled_unlock ();
       }
