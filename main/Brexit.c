@@ -14,6 +14,7 @@ const char TAG[] = "Brexit";
 #define DS18B20_RESOLUTION   (DS18B20_RESOLUTION_12_BIT)
 
 // Setting for "logo" is 64x48 bytes (4 bits per pixel)
+// Note that MQTT config needs to allow a large enough message for the logo
 #define LOGOW	128
 #define	LOGOH	48
 
