@@ -1,19 +1,12 @@
 // Brexit clock
 // Copyright (c) 2019 Adrian Kennard, Andrews & Arnold Limited, see LICENSE file (GPL)
-const char TAG[] = "Brexit";
+static const char TAG[] = "Brexit";
 
 #include "revk.h"
 #include <driver/i2c.h>
 #include <math.h>
 #include "oled.h"
 #include "logo.h"
-
-#define ACK_CHECK_EN 0x1        /*!< I2C master will check ack from slave */
-#define ACK_CHECK_DIS 0x0       /*!< I2C master will not check ack from slave */
-#define ACK_VAL 0x0             /*!< I2C ack value */
-#define NACK_VAL 0x1            /*!< I2C nack value */
-#define	MAX_OWB	8
-#define DS18B20_RESOLUTION   (DS18B20_RESOLUTION_12_BIT)
 
 // Setting for "logo" is 64x48 bytes (4 bits per pixel)
 // Note that MQTT config needs to allow a large enough message for the logo
@@ -81,12 +74,12 @@ app_main ()
    // Main task...
    while (1)
    {
-      oled_lock ();
       char s[30];
       static time_t showtime = 0;
       time_t now = time (0);
       if (now != showtime)
       {
+         oled_lock ();
          showtime = now;
          struct tm nowt;
          localtime_r (&showtime, &nowt);
@@ -146,8 +139,10 @@ app_main ()
                X = oled_text (2, X, Y, s);
             }
          }
+	 else
+            oled_text (1, 0, 0, "Clock not set...");
+         oled_unlock ();
       }
-      oled_unlock ();
       // Next second
       usleep (1000000LL - (esp_timer_get_time () % 1000000LL));
    }
