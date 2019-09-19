@@ -348,9 +348,7 @@ app_main ()
                   if (nowt.tm_hour * 3600 + nowt.tm_min * 60 + nowt.tm_sec > H * 3600 + M * 60 + S)
                      days--;    // Passed current time
                }
-             struct tm deadt = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d, tm_hour: H, tm_min: M, tm_sec: S, tm_isdst:-1 };
-               nowt.tm_mday += days;    // Current local time, this many days ahead
-               nowt.tm_isdst = -1;
+             struct tm deadt = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d - days, tm_hour: H, tm_min: M, tm_sec: S, tm_isdst:-1 };
                int seconds = mktime (&deadt) - mktime (&nowt);
                if (days < 0)
                   days = seconds = 0;   // Deadline reached
