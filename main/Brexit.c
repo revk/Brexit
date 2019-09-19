@@ -13,6 +13,10 @@ const char TAG[] = "Brexit";
 #define	MAX_OWB	8
 #define DS18B20_RESOLUTION   (DS18B20_RESOLUTION_12_BIT)
 
+// Setting for "logo" is 64x48 bytes (4 bits per pixel)
+#define LOGOW	128
+#define	LOGOH	48
+
 #define settings	\
 	s8(oledsda,5)	\
 	s8(oledscl,18)	\
@@ -36,6 +40,7 @@ settings
 static SemaphoreHandle_t oledi2c_mutex = NULL;
 static SemaphoreHandle_t oled_mutex = NULL;
 static int8_t oledport = -1;
+static uint8_t logo[LOGOW * LOGOH / 2];
 
 static volatile uint8_t oled_update = 0;
 static volatile uint8_t oled_contrast = 0;
@@ -103,6 +108,14 @@ oledcopy (int x, int y, const uint8_t * src, int dx)
       }
    }
    return dx * OLEDB / 8;       // Bytes (would be) copied
+}
+
+static int
+icon (int x, int y, const void *p, int w, int h)
+{                               // Plot an icon
+   for (int dy = 0; dy < h; dy++)
+      p += oledcopy (x, y + h - dy - 1, p, w);
+   return x + w;
 }
 
 #include CONFIG_BREXIT_LOGO
@@ -189,14 +202,6 @@ oled_task (void *p)
       return;
    }
 
-   memset (oled, 0x00, sizeof (oled));  // Blank
-   {
-      int w = sizeof (logo[0]) * 8 / OLEDB;
-      int h = sizeof (logo) / sizeof (*logo);
-      for (int dy = 0; dy < h; dy++)
-         oledcopy (OLEDW - w, 10 + h - dy, logo[dy], w);
-      text (1, 0, 0, CONFIG_BREXIT_TAG);
-   }
 
    while (1)
    {                            // Update
@@ -269,7 +274,14 @@ app_main ()
 #undef u8
 #undef b
 #undef s
-      oled_mutex = xSemaphoreCreateMutex ();    // Shared text access
+      revk_register ("logo", 0, sizeof (logo), &logo, NULL, SETTING_BINARY);    // fixed logo
+   {
+      int p;
+      for (p = 0; p < sizeof (logo) && !logo[p]; p++);
+      if (p == sizeof (logo))
+         memcpy (logo, brexit, sizeof (logo));      // default
+   }
+   oled_mutex = xSemaphoreCreateMutex ();       // Shared text access
    oled_contrast = oledcontrast;        // Initial contrast
    if (oledsda >= 0 && oledscl >= 0)
    {                            // Separate OLED port
@@ -298,6 +310,8 @@ app_main ()
       }
       oledi2c_mutex = xSemaphoreCreateMutex ();
    }
+   memset (oled, 0x00, sizeof (oled));  // Blank
+   icon (0, 10, logo, LOGOW, LOGOH);
    if (oledport >= 0)
       revk_task ("OLED", oled_task, NULL);
    // Main task...
