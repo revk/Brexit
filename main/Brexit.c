@@ -71,6 +71,7 @@ app_main ()
    if (oledsda >= 0 && oledscl >= 0)
       oled_start (1, oledaddress, oledscl, oledsda, oledflip);
    oled_icon (0, 10, logo, LOGOW, LOGOH);
+   return 0;
    // Main task...
    while (1)
    {
