@@ -6,4 +6,11 @@ menu "Brexit"
 	help
 		The deadline
 
+	config BREXIT_TAGLINE
+	string "Tag line"
+	default "DOOMSDAY COMETH"
+	help
+		The tag line before clock set
+
+
 endmenu
