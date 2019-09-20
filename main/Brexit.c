@@ -69,11 +69,7 @@ app_main ()
       if (p == sizeof (logo))
          memcpy (logo, brexit, sizeof (logo));  // default
    }
-<<<<<<< HEAD
-return 0;
-=======
-   return 0;
->>>>>>> 96ec96002f787b821ef15734f6e40babd0698f3e
+return;
    if (oledsda >= 0 && oledscl >= 0)
       oled_start (1, oledaddress, oledscl, oledsda, oledflip);
    oled_icon (0, 10, logo, LOGOW, LOGOH);
