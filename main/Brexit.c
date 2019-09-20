@@ -62,12 +62,14 @@ app_main ()
 #undef b
 #undef s
       revk_register ("logo", 0, sizeof (logo), &logo, NULL, SETTING_BINARY);    // fixed logo
+   ESP_LOGI(TAG,"Hello");
    {
       int p;
       for (p = 0; p < sizeof (logo) && !logo[p]; p++);
       if (p == sizeof (logo))
          memcpy (logo, brexit, sizeof (logo));  // default
    }
+return 0;
    if (oledsda >= 0 && oledscl >= 0)
       oled_start (1, oledaddress, oledscl, oledsda, oledflip);
    oled_icon (0, 10, logo, LOGOW, LOGOH);
