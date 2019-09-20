@@ -68,9 +68,9 @@ app_main ()
       if (p == sizeof (logo))
          memcpy (logo, brexit, sizeof (logo));  // default
    }
-   return 0;
    if (oledsda >= 0 && oledscl >= 0)
       oled_start (1, oledaddress, oledscl, oledsda, oledflip);
+   return;
    oled_icon (0, 10, logo, LOGOW, LOGOH);
    // Main task...
    while (1)
