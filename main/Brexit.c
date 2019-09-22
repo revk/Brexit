@@ -128,10 +128,10 @@ app_main ()
                sprintf (s, "%4d", days);
                Y -= 5 * 7;
                X = oled_text (5, 0, Y, s);
-               oled_text (1, X, Y + 3 * 8, "D");
-               oled_text (1, X, Y + 2 * 8, "A");
-               oled_text (1, X, Y + 1 * 8, "Y");
-               oled_text (1, X, Y + 0 * 8, days == 1 ? " " : "S");
+               oled_text (1, X, Y + 3 * 9, "D");
+               oled_text (1, X, Y + 2 * 9, "A");
+               oled_text (1, X, Y + 1 * 9, "Y");
+               oled_text (1, X, Y + 0 * 9, days == 1 ? " " : "S");
                Y -= 4 * 7 + 3;
                sprintf (s, "%02d", seconds / 3600);
                X = oled_text (4, 0, Y, s);
