@@ -21,6 +21,7 @@ static const char TAG[] = "Brexit";
 	b(oledflip)	\
 	b(f)	\
 	s(deadline,CONFIG_BREXIT_DEADLINE)	\
+	s(tagline,CONFIG_BREXIT_TAGLINE)	\
 
 #define u32(n,d)	uint32_t n;
 #define s8(n,d)	int8_t n;
@@ -72,13 +73,14 @@ app_main ()
    if (oledsda >= 0 && oledscl >= 0)
       oled_start (1, oledaddress, oledscl, oledsda, oledflip);
    oled_icon (0, 10, logo, LOGOW, LOGOH);
+   oled_text (1, 0, 0, *tagline ? tagline : "Clock not set...");
    // Main task...
    while (1)
    {
       char s[30];
       static time_t showtime = 0;
       time_t now = time (0);
-      if (now != showtime && now < 1000000000)
+      if (now != showtime)
       {
          oled_lock ();
          showtime = now;
@@ -127,10 +129,10 @@ app_main ()
                sprintf (s, "%4d", days);
                Y -= 5 * 7;
                X = oled_text (5, 0, Y, s);
-               oled_text (1, X, Y + 3 * 8, "D");
-               oled_text (1, X, Y + 2 * 8, "A");
-               oled_text (1, X, Y + 1 * 8, "Y");
-               oled_text (1, X, Y + 0 * 8, days == 1 ? " " : "S");
+               oled_text (1, X, Y + 3 * 9, "D");
+               oled_text (1, X, Y + 2 * 9, "A");
+               oled_text (1, X, Y + 1 * 9, "Y");
+               oled_text (1, X, Y + 0 * 9, days == 1 ? " " : "S");
                Y -= 4 * 7 + 3;
                sprintf (s, "%02d", seconds / 3600);
                X = oled_text (4, 0, Y, s);
@@ -139,8 +141,7 @@ app_main ()
                sprintf (s, ":%02d", seconds % 60);
                X = oled_text (2, X, Y, s);
             }
-         } else
-            oled_text (1, 0, 0, "Clock not set...");
+         }
          oled_unlock ();
       }
       // Next second
