@@ -63,7 +63,6 @@ app_main ()
 #undef b
 #undef s
       revk_register ("logo", 0, sizeof (logo), &logo, NULL, SETTING_BINARY);    // fixed logo
-   ESP_LOGI(TAG,"Hello");
    {
       int p;
       for (p = 0; p < sizeof (logo) && !logo[p]; p++);
