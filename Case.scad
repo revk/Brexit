@@ -1,4 +1,4 @@
-// 3D case for simple ESP32 device
+// 3D case for counttdown clock
 // Copyright (c) 2019 Adrian Kennard, Andrews & Arnold Limited, see LICENSE file (GPL)
 
 // PCBCase is normally a submodule so needs the directoy
