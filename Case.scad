@@ -1,9 +1,7 @@
 // 3D case for counttdown clock
 // Copyright (c) 2019 Adrian Kennard, Andrews & Arnold Limited, see LICENSE file (GPL)
 
-// PCBCase is normally a submodule so needs the directoy
 use <PCBCase/case.scad>
-use <PCBCase/parts.scad>
 
 width=45;
 height=37;
