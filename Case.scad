@@ -20,9 +20,9 @@ module pcb(s=0)
     { // 1mm ref edge of PCB vs SVG design
         esp32(s,26.170,10.448,-90);
         oled(s,1,1);
-        d24v5f3(s,9.455,17.311,180);
+        d24v5f3(s,12.430,14.659,180);
         spox(s,20.000,30.100,180,4,hidden=true);
-        usbc(s,6.715,31.115,180);
+        usbc(s,9.715,31.115,180);
     }
 }
 
