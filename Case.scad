@@ -7,7 +7,7 @@ width=45;
 height=37;
 
 // Box thickness reference to component cube
-base=10;
+base=10.4;
 top=5;
 
 $fn=48;
@@ -23,6 +23,7 @@ module pcb(s=0)
         usbc(s,9.715,31.115,180);
         smd1206(s,10.385,28.365);
         smd1206(s,14.785,28.365);
+        switch66(s,17.860,3.890,90);
     }
 }
 
