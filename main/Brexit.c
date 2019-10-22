@@ -17,6 +17,7 @@ static const char TAG[] = "Brexit";
 	s8(oledsda,5)	\
 	s8(oledscl,18)	\
 	s8(oledaddress,0x3D)	\
+	u8(oledcontrast,127)	\
 	b(oledflip)	\
 	b(f)	\
 	s(deadline,CONFIG_BREXIT_DEADLINE)	\
@@ -70,6 +71,7 @@ app_main ()
    }
    if (oledsda >= 0 && oledscl >= 0)
       oled_start (1, oledaddress, oledscl, oledsda, oledflip);
+   oled_set_contrast (oledcontrast);
    oled_icon (0, 10, logo, LOGOW, LOGOH);
    oled_text (1, 0, 0, *tagline ? tagline : "Clock not set...");
    // Main task...
