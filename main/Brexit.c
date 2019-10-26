@@ -60,13 +60,16 @@ app_command (const char *tag, unsigned int len, const unsigned char *value)
             H = 0,
             M = 0,
             S = 0;
-         sscanf ((char *) value, "%d-%d-%d %d:%d:%d", &y, &m, &d, &H, &M, &S);
+         char z = 0;
+         sscanf ((char *) value, "%d-%d-%d %d:%d:%d%c", &y, &m, &d, &H, &M, &S, &z);
          t.tm_year = y - 1900;
          t.tm_mon = m - 1;
          t.tm_mday = d;
          t.tm_hour = H;
          t.tm_min = M;
          t.tm_sec = S;
+         if (!z)
+            t.tm_isdst = -1;
          struct timeval v = { };
          v.tv_sec = mktime (&t);
          settimeofday (&v, NULL);
