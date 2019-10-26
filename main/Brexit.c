@@ -67,7 +67,6 @@ app_command (const char *tag, unsigned int len, const unsigned char *value)
          t.tm_hour = H;
          t.tm_min = M;
          t.tm_sec = S;
-         t.tm_isdst = -1;
          struct timeval v = { };
          v.tv_sec = mktime (&t);
          settimeofday (&v, NULL);
