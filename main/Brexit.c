@@ -3,6 +3,7 @@
 static const char TAG[] = "Brexit";
 
 #include "revk.h"
+#include "esp_sntp.h"
 #include <driver/i2c.h>
 #include <math.h>
 #include "oled.h"
@@ -43,6 +44,35 @@ app_command (const char *tag, unsigned int len, const unsigned char *value)
    {
       oled_set_contrast (atoi ((char *) value));
       return "";                // OK
+   }
+   if (!strcmp (tag, "time"))
+   {
+      if (!len)
+      {
+         sntp_init ();
+      } else
+      {
+         sntp_stop ();
+         struct tm t = { };
+         int y = 0,
+            m = 0,
+            d = 0,
+            H = 0,
+            M = 0,
+            S = 0;
+         sscanf ((char *) value, "%d-%d-%d %d:%d:%d", &y, &m, &d, &H, &M, &S);
+         t.tm_year = y - 1900;
+         t.tm_mon = m - 1;
+         t.tm_mday = d;
+         t.tm_hour = H;
+         t.tm_min = M;
+         t.tm_sec = S;
+         t.tm_isdst = -1;
+         struct timeval v = { };
+         v.tv_sec = mktime (&t);
+         settimeofday (&v, NULL);
+      }
+      return "";
    }
    return NULL;
 }
