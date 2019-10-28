@@ -15,7 +15,7 @@
    version="1.1"
    id="svg926"
    inkscape:version="0.92.2 5c3e80d, 2017-08-06"
-   sodipodi:docname="PCB.svg">
+   sodipodi:docname="PCBV1.svg">
   <defs
      id="defs920" />
   <sodipodi:namedview
@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="6.7138021"
-     inkscape:cx="101.03749"
+     inkscape:cx="126.24567"
      inkscape:cy="73.510862"
      inkscape:document-units="mm"
      inkscape:current-layer="layer6"
@@ -38,7 +38,7 @@
      gridtolerance="8"
      inkscape:window-width="2560"
      inkscape:window-height="1395"
-     inkscape:window-x="264"
+     inkscape:window-x="398"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
      fit-margin-top="0"
@@ -254,7 +254,7 @@
        cy="-24.489985"
        r="1.5" />
     <g
-       transform="rotate(-180,21.832501,42.380002)"
+       transform="rotate(-180,20.562499,42.380133)"
        id="layer1"
        inkscape:label="Layer 1">
       <rect
