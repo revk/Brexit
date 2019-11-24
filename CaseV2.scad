@@ -8,7 +8,7 @@ height=37;
 
 // Box thickness reference to component cube
 base=1;
-top=10.4;
+top=10;
 
 $fn=48;
 
