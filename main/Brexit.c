@@ -13,6 +13,7 @@ static const char TAG[] = "Brexit";
 // Note that MQTT config needs to allow a large enough message for the logo
 #define LOGOW	128
 #define	LOGOH	48
+#define	EU	20
 
 #define settings	\
 	s8(oledsda,5)	\
@@ -95,11 +96,15 @@ app_main ()
 #undef b
 #undef s
       revk_register ("logo", 0, sizeof (logo), &logo, NULL, SETTING_BINARY);    // fixed logo
+   char defaultlogo = 0;
    {
       int p;
       for (p = 0; p < sizeof (logo) && !logo[p]; p++);
       if (p == sizeof (logo))
+      {
          memcpy (logo, brexit, sizeof (logo));  // default
+         defaultlogo = 1;
+      }
    }
    if (oledsda >= 0 && oledscl >= 0)
       oled_start (1, oledaddress, oledscl, oledsda, oledflip);
@@ -158,6 +163,21 @@ app_main ()
                int seconds = mktime (&deadt) - mktime (&nowt);
                if (days < 0)
                   days = seconds = 0;   // Deadline reached
+               if (defaultlogo)
+               {
+                  oled_icon (0, 10, logo, LOGOW, LOGOH);
+                  float r = M_PI * (12 - days) / 6;
+                  for (int x = -EU; x <= EU; x++)
+                     for (int y = -EU; y <= EU; y++)
+                     {
+                        float a = atan2f (x, y) - M_PI / 12;
+                        if (a < 0)
+                           a += M_PI * 2;
+                        if (a < r)
+                           if (oled_get (LOGOW - EU - 1 + x, 10 + LOGOH / 2 + y))
+                              oled_set (LOGOW - EU - 1 + x, 10 + LOGOH / 2 + y, (x ^ y) & 1);
+                     }
+               }
                sprintf (s, "%4d", days);
                Y -= 5 * 7;
                X = oled_text (5, 0, Y, s);
