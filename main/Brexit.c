@@ -161,23 +161,36 @@ app_main ()
                }
              struct tm deadt = { tm_year: y - 1900, tm_mon: m - 1, tm_mday: d - days, tm_hour: H, tm_min: M, tm_sec: S, tm_isdst:-1 };
                int seconds = mktime (&deadt) - mktime (&nowt);
-               if (days < 0)
-                  days = seconds = 0;   // Deadline reached
                if (defaultlogo)
                {
                   oled_icon (0, 10, logo, LOGOW, LOGOH);
-                  float r = M_PI * (12 - days) / 6;
-                  for (int x = -EU; x <= EU; x++)
-                     for (int y = -EU; y <= EU; y++)
+                  if (days < 0)
+                  {             // Break up UK flag
+                     for (int y = 0; y < LOGOH; y++)
                      {
-                        float a = atan2f (x, y) - M_PI / 12;
-                        if (a < 0)
-                           a += M_PI * 2;
-                        if (a < r)
-                           if (oled_get (LOGOW - EU - 1 + x, 10 + LOGOH / 2 + y))
-                              oled_set (LOGOW - EU - 1 + x, 10 + LOGOH / 2 + y, (x ^ y) & 1);
+                        uint8_t r[LOGOW / 8];
+                        esp_fill_random (r, sizeof (r));
+                        for (int x = 0; x < LOGOW - EU * 2; x++)
+                           if (r[x / 8] & (1 << (x & 7)))
+                              oled_set (x, 10 + y, 0);
                      }
+                  } else
+                  {             // Blink out EU flag
+                     float r = M_PI * (12 - days) / 6;
+                     for (int x = -EU; x <= EU; x++)
+                        for (int y = -EU; y <= EU; y++)
+                        {
+                           float a = atan2f (x, y) - M_PI / 12;
+                           if (a < 0)
+                              a += M_PI * 2;
+                           if (a < r)
+                              if (oled_get (LOGOW - EU - 1 + x, 10 + LOGOH / 2 + y))
+                                 oled_set (LOGOW - EU - 1 + x, 10 + LOGOH / 2 + y, (x ^ y) & 1);
+                        }
+                  }
                }
+               if (days < 0)
+                  days = seconds = 0;   // Deadline reached
                sprintf (s, "%4d", days);
                Y -= 5 * 7;
                X = oled_text (5, 0, Y, s);
