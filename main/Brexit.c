@@ -1,6 +1,6 @@
 // Brexit clock
 // Copyright (c) 2019 Adrian Kennard, Andrews & Arnold Limited, see LICENSE file (GPL)
-static const char TAG[] = "Brexit";
+//static const char TAG[] = "Brexit";
 
 #include "revk.h"
 #include "esp_sntp.h"
