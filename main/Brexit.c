@@ -95,7 +95,7 @@ app_main ()
 #undef u8
 #undef b
 #undef s
-      revk_register ("logo", 0, sizeof (logo), &logo, NULL, SETTING_BINARY);    // fixed logo
+      revk_register ("logo", 0, sizeof (logo), &logo, NULL, SETTING_BINDATA);    // fixed logo
    char defaultlogo = 0;
    {
       int p;
