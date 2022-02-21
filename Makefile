@@ -4,8 +4,27 @@
 #
 
 PROJECT_NAME := Brexit
+SUFFIX := $(shell components/ESP32-RevK/suffix)
 
-include $(IDF_PATH)/make/project.mk
+all:
+	idf.py build
+	cp build/$(PROJECT_NAME).bin build/$(PROJECT_NAME)$(SUFFIX).bin
+
+flash:
+	idf.py flash
+
+monitor:
+	idf.py monitor
+
+clean:
+	idf.py clean
+
+menuconfig:
+	idf.py menuconfig
+
+pull:
+	git pull
+	git submodule update --recursive
 
 update:
 	git submodule update --init --recursive --remote
