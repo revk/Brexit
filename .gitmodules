@@ -6,7 +6,7 @@
 	url = https://github.com/revk/ESP32-RevK
 [submodule "PCBCase"]
 	path = PCBCase
-	url = https://github.com/revk/PCBCase
+	url = https://codeberg.org/RevK/PCBCase
 [submodule "components/esp32-ds18b20"]
 	path = components/esp32-ds18b20
 	url = https://github.com/DavidAntliff/esp32-ds18b20
